@@ -1,0 +1,272 @@
+{
+  "version": 9,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 23,
+    "patch": 0
+  },
+  "configurePresets": [
+    // ---------------------------------------------------------------------------------------------
+    // Base configurations
+    {
+      "name": "Base",
+      "displayName": "Base configuration",
+      "description": "Base configuration for all library-only builds",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "cacheVariables": {
+        "Ymir_ENABLE_IMGUI_DEMO": "ON",
+        "Ymir_ENABLE_SANDBOX": "ON",
+        "Ymir_ENABLE_TESTS": "ON",
+        "Ymir_ENABLE_UPDATE_CHECKS": "OFF",
+        "Ymir_ENABLE_YMDASM": "ON",
+        "Ymir_LIBRARY_ONLY": "ON"
+      },
+      "vendor": {
+        "microsoft.com/VisualStudioSettings/CMake/1.0": {
+          "hostOS": [
+            "Windows"
+          ]
+        }
+      }
+    },
+
+    // ---------------------------------------------------------------------------------------------
+    // Base x86-64 configurations
+    {
+      "name": "x64-Base",
+      "displayName": "x86-64 base configuration",
+      "description": "Base configuration for all x86-64 builds",
+      "hidden": true,
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      }
+    },
+    {
+      "name": "x64-SSE2-Base",
+      "displayName": "x64 SSE2 (base configuration)",
+      "description": "Base configuration for all x86-64 builds with SSE2 support",
+      "hidden": true,
+      "inherits": [ "x64-Base" ],
+      "cacheVariables": {
+        "Ymir_AVX2": "OFF"
+      }
+    },
+    {
+      "name": "x64-AVX2-Base",
+      "displayName": "x64 AVX2 (base configuration)",
+      "description": "Base configuration for all x86-64 builds with AVX2 support",
+      "hidden": true,
+      "inherits": [ "x64-Base" ],
+      "cacheVariables": {
+        "Ymir_AVX2": "ON"
+      }
+    },
+
+    // ---------------------------------------------------------------------------------------------
+    // Base Clang configurations
+    {
+      "name": "x64-Clang-Base",
+      "displayName": "x64 Clang (base configuration)",
+      "description": "Base configuration for Clang-based x86-64 builds",
+      "hidden": true,
+      "inherits": [ "x64-Base" ],
+      "toolset": "ClangCL",
+      "environment": {
+        "CC": "clang-cl",
+        "CXX": "clang-cl"
+      },
+      "vendor": {
+        "microsoft.com/VisualStudioSettings/CMake/1.0": {
+          "hostOS": [
+            "Windows"
+          ],
+          "intelliSenseMode": "windows-clang-x64"
+        }
+      }
+    },
+    {
+      "name": "x64-SSE2-Clang-Base",
+      "displayName": "x64 SSE2 Clang (base configuration)",
+      "description": "Base configuration for Clang-based x86-64 builds with SSE2 support",
+      "hidden": true,
+      "inherits": [ "x64-Clang-Base", "x64-SSE2-Base" ],
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "x64-win-llvm-static-md"
+      }
+    },
+    {
+      "name": "x64-AVX2-Clang-Base",
+      "displayName": "x64 AVX2 Clang (base configuration)",
+      "description": "Base configuration for Clang-based x86-64 builds with AVX2 support",
+      "hidden": true,
+      "inherits": [ "x64-Clang-Base", "x64-AVX2-Base" ],
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "x64-win-llvm-avx2-static-md"
+      }
+    },
+
+    // ---------------------------------------------------------------------------------------------
+    // Base MSVC configurations
+    {
+      "name": "x64-MSVC-Base",
+      "displayName": "x64 MSVC (base configuration)",
+      "description": "Base configuration for MSVC-based x86-64 builds",
+      "hidden": true,
+      "inherits": [ "x64-Base" ],
+      "environment": {
+        "CC": "cl",
+        "CXX": "cl"
+      }
+    },
+    {
+      "name": "x64-SSE2-MSVC-Base",
+      "displayName": "x64 SSE2 MSVC (base configuration)",
+      "description": "Base configuration for MSVC-based x86-64 builds with SSE2 support",
+      "hidden": true,
+      "inherits": [ "x64-MSVC-Base", "x64-SSE2-Base" ],
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "x64-windows"
+      }
+    },
+    {
+      "name": "x64-AVX2-MSVC-Base",
+      "displayName": "x64 AVX2 MSVC (base configuration)",
+      "description": "Base configuration for MSVC-based x86-64 builds with AVX2 support",
+      "hidden": true,
+      "inherits": [ "x64-MSVC-Base", "x64-AVX2-Base" ],
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "x64-windows"
+      }
+    },
+
+    // ---------------------------------------------------------------------------------------------
+    // Base build target presets
+    {
+      "name": "Debug-Base",
+      "displayName": "Debug (base configuration)",
+      "description": "Base configuration for Debug builds",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "Ymir_ENABLE_DEV_ASSERTIONS": "ON",
+        "Ymir_ENABLE_DEVLOG": "ON",
+        "Ymir_ENABLE_IPO": "OFF",
+        "Ymir_EXTRA_INLINING": "OFF"
+      }
+    },
+    {
+      "name": "Release-Base",
+      "displayName": "Release (base configuration)",
+      "description": "Base configuration for Release builds",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "Ymir_ENABLE_DEV_ASSERTIONS": "ON",
+        "Ymir_ENABLE_DEVLOG": "ON",
+        "Ymir_ENABLE_IPO": "OFF",
+        "Ymir_EXTRA_INLINING": "OFF"
+      }
+    },
+    {
+      "name": "Release-Dist-Base",
+      "displayName": "Release/Dist (base configuration)",
+      "description": "Base configuration for Release/Dist builds",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "Ymir_ENABLE_DEV_ASSERTIONS": "OFF",
+        "Ymir_ENABLE_DEVLOG": "OFF",
+        "Ymir_ENABLE_IMGUI_DEMO": "OFF",
+        "Ymir_ENABLE_IPO": "OFF",
+        "Ymir_EXTRA_INLINING": "ON"
+      }
+    },
+
+    // ---------------------------------------------------------------------------------------------
+    // x86-64 SSE2 Clang
+    {
+      "name": "x64-SSE2-Clang-Debug",
+      "displayName": "x64 SSE2 Clang Debug",
+      "description": "Debug build for x86-64 Clang with SSE2 support",
+      "inherits": [ "Base", "x64-SSE2-Clang-Base", "Debug-Base" ]
+    },
+    {
+      "name": "x64-SSE2-Clang-Release",
+      "displayName": "x64 SSE2 Clang Release",
+      "description": "Release configuration for x86-64 Clang with SSE2 support",
+      "inherits": [ "Base", "x64-SSE2-Clang-Base", "Release-Base" ]
+    },
+    {
+      "name": "x64-SSE2-Clang-Release-Dist",
+      "displayName": "x64 SSE2 Clang Release/Dist",
+      "description": "Release (distribution) configuration for x86-64 Clang with SSE2 support",
+      "inherits": [ "Base", "x64-SSE2-Clang-Base", "Release-Dist-Base" ]
+    },
+
+    // ---------------------------------------------------------------------------------------------
+    // x86-64 AVX2 Clang
+    {
+      "name": "x64-AVX2-Clang-Debug",
+      "displayName": "x64 AVX2 Clang Debug",
+      "description": "Debug configuration for x86-64 Clang with AVX2 support",
+      "inherits": [ "Base", "x64-AVX2-Clang-Base", "Debug-Base" ]
+    },
+    {
+      "name": "x64-AVX2-Clang-Release",
+      "displayName": "x64 AVX2 Clang Release",
+      "description": "Release configuration for x86-64 Clang with AVX2 support",
+      "inherits": [ "Base", "x64-AVX2-Clang-Base", "Release-Base" ]
+    },
+    {
+      "name": "x64-AVX2-Clang-Release-Dist",
+      "displayName": "x64 AVX2 Clang Release/Dist",
+      "description": "Release (distribution) configuration for x86-64 Clang with AVX2 support",
+      "inherits": [ "Base", "x64-AVX2-Clang-Base", "Release-Dist-Base" ]
+    },
+
+    // ---------------------------------------------------------------------------------------------
+    // x86-64 SSE2 MSVC
+    {
+      "name": "x64-SSE2-MSVC-Debug",
+      "displayName": "x64 SSE2 MSVC Debug",
+      "description": "Debug configuration for x86-64 MSVC with SSE2 support",
+      "inherits": [ "Base", "x64-SSE2-MSVC-Base", "Debug-Base" ]
+    },
+    {
+      "name": "x64-SSE2-MSVC-Release",
+      "displayName": "x64 SSE2 MSVC Release",
+      "description": "Release configuration for x86-64 MSVC with SSE2 support",
+      "inherits": [ "Base", "x64-SSE2-MSVC-Base", "Release-Base" ]
+    },
+    {
+      "name": "x64-SSE2-MSVC-Release-Dist",
+      "displayName": "x64 SSE2 MSVC Release/Dist",
+      "description": "Release (distribution) configuration for x86-64 MSVC with SSE2 support",
+      "inherits": [ "Base", "x64-SSE2-MSVC-Base", "Release-Dist-Base" ]
+    },
+
+    // ---------------------------------------------------------------------------------------------
+    // x86-64 AVX2 Clang
+    {
+      "name": "x64-AVX2-MSVC-Debug",
+      "displayName": "x64 AVX2 MSVC Debug",
+      "description": "Debug configuration for x86-64 MSVC with AVX2 support",
+      "inherits": [ "Base", "x64-AVX2-MSVC-Base", "Debug-Base" ]
+    },
+    {
+      "name": "x64-AVX2-MSVC-Release",
+      "displayName": "x64 AVX2 MSVC Release",
+      "description": "Release configuration for x86-64 MSVC with AVX2 support",
+      "inherits": [ "Base", "x64-AVX2-MSVC-Base", "Release-Base" ]
+    },
+    {
+      "name": "x64-AVX2-MSVC-Release-Dist",
+      "displayName": "x64 AVX2 MSVC Release/Dist",
+      "description": "Release (distribution) configuration for x86-64 MSVC with AVX2 support",
+      "inherits": [ "Base", "x64-AVX2-MSVC-Base", "Release-Dist-Base" ]
+    }
+  ]
+}
